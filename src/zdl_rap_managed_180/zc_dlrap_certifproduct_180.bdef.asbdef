@@ -1,0 +1,18 @@
+projection;
+strict ( 2 );
+
+define behavior for ZC_DLRAP_CERTIFPRODUCT_180 alias Certificate
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _Stats { create; }
+}
+
+define behavior for ZC_DLRAP_CERTIFSTPRODUCT_180 alias CertificateST
+{
+  use delete;
+
+  use association _Certif;
+}
