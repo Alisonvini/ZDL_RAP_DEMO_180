@@ -1,5 +1,6 @@
 projection;
 strict ( 2 );
+use draft;
 
 define behavior for ZC_DLRAP_CERTIFPRODUCT_180 alias Certificate
 {
@@ -7,7 +8,13 @@ define behavior for ZC_DLRAP_CERTIFPRODUCT_180 alias Certificate
   use update;
   use delete;
 
-  use association _Stats { create; }
+  use association _Stats { create; with draft; }
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+  use action Resume;
 }
 
 define behavior for ZC_DLRAP_CERTIFSTPRODUCT_180 alias CertificateST
