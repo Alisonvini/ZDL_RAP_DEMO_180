@@ -95,7 +95,7 @@ annotate entity ZC_DLRAP_CERTIFPRODUCT_180 with
   @UI.identification: [{ position: 80 }]
   @EndUserText.label: 'Certificado TUEV'
   CertTuev;
-
+ 
 
 
 
