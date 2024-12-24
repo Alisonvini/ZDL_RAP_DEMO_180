@@ -3,8 +3,12 @@ CLASS lhc_Certificate DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION
       IMPORTING keys REQUEST requested_authorizations FOR Certificate RESULT result.
+
     METHODS setinitialvalues FOR DETERMINE ON MODIFY
       IMPORTING keys FOR certificate~setinitialvalues.
+
+    METHODS checkmaterial FOR VALIDATE ON SAVE
+      IMPORTING keys FOR certificate~checkmaterial.
 
 ENDCLASS.
 
@@ -66,6 +70,48 @@ CLASS lhc_Certificate IMPLEMENTATION.
               MAPPED DATA(ls_mapped_ass)
               FAILED DATA(ls_failed_ass).
 
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD checkMaterial.
+
+    READ ENTITIES OF zi_dlrap_certifproduct_180 IN LOCAL MODE
+         ENTITY Certificate
+         FIELDS ( CertStatus )
+         WITH CORRESPONDING #( keys )
+         RESULT DATA(lt_certificates).
+
+    CHECK lt_certificates IS NOT INITIAL.
+
+    SELECT *
+    FROM zrap_certif_180
+    INTO TABLE @DATA(lt_material).
+
+    LOOP AT lt_certificates INTO DATA(ls_certificates).
+      IF  ls_certificates-Matnr IS INITIAL OR
+            NOT line_exists( lt_material[ matnr = ls_certificates-Matnr ]  ).
+
+        APPEND VALUE #( %tky = ls_certificates-%tky ) TO failed-certificate.
+        APPEND VALUE #( %tky = ls_certificates-%tky
+                        %state_area = 'material_unknown'
+*                        %msg = new_message(
+*                                id = 'ZDLRAP_MANAGED_180'
+*                                number = '001'
+*                                severity = if_abap_behv_message=>severity-error
+*                                v1 = ls_certificates-Matnr
+*                                )
+*
+                         %msg =  NEW zcx_dlrap_certificate180(
+                                 severity = if_abap_behv_message=>severity-error
+                                 textid = zcx_dlrap_certificate180=>material_unknown
+                                 attr1 = CONV string( ls_certificates-Matnr )
+                                )
+
+                            )
+                            TO reported-certificate.
+
+      ENDIF.
     ENDLOOP.
 
   ENDMETHOD.
