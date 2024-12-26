@@ -15,6 +15,10 @@ define behavior for ZC_DLRAP_CERTIFPRODUCT_180 alias Certificate
   use action Discard;
   use action Prepare;
   use action Resume;
+
+  use action NewVersion;
+  use action ActiveVersion;
+  use action InactiveVersion;
 }
 
 define behavior for ZC_DLRAP_CERTIFSTPRODUCT_180 alias CertificateST

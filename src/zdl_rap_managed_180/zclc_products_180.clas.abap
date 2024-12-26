@@ -21,12 +21,12 @@ CLASS zclc_products_180 IMPLEMENTATION.
     DELETE FROM zrap_product_180.
 
     DATA(lt_products) = VALUE tt_products(
-    ( matnr = '1' description = 'Celular'    language = 'P')
-    ( matnr = '2' description = 'Televisão'  language = 'P')
-    ( matnr = '3' description = 'Computador' language = 'P')
-    ( matnr = '1' description = 'Phone'      language = 'E')
-    ( matnr = '2' description = 'Television' language = 'E')
-    ( matnr = '3' description = 'Computer'   language = 'E')
+    ( matnr = '000000000000000001' description = 'Celular'    language = 'P')
+    ( matnr = '000000000000000002' description = 'Televisão'  language = 'P')
+    ( matnr = '000000000000000003' description = 'Computador' language = 'P')
+    ( matnr = '000000000000000001' description = 'Phone'      language = 'E')
+    ( matnr = '000000000000000002' description = 'Television' language = 'E')
+    ( matnr = '000000000000000003' description = 'Computer'   language = 'E')
     ).
 
     MODIFY zrap_product_180 FROM TABLE @lt_products.
