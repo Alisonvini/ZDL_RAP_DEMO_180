@@ -26,11 +26,52 @@ CLASS lhc_Certificate DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS newversion FOR MODIFY
       IMPORTING keys FOR ACTION certificate~newversion RESULT result.
 
+    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
+      IMPORTING REQUEST requested_authorizations FOR certificate RESULT result.
+
 ENDCLASS.
 
 CLASS lhc_Certificate IMPLEMENTATION.
 
   METHOD get_instance_authorizations.
+
+    READ ENTITIES OF zi_dlrap_certifproduct_180 IN LOCAL MODE
+        ENTITY Certificate
+        FIELDS ( CertStatus )
+        WITH CORRESPONDING #( keys )
+        RESULT DATA(lt_certificates).
+
+    CHECK lt_certificates IS NOT INITIAL.
+
+    LOOP AT lt_certificates INTO DATA(ls_certificates).
+
+      APPEND VALUE #( LET status_inativo = COND #( WHEN ls_certificates-CertStatus = 2
+                                            THEN if_abap_behv=>auth-unauthorized
+                                            ELSE if_abap_behv=>auth-allowed
+                                             )
+                          status_ativo = COND #( WHEN ls_certificates-CertStatus = 3
+                                            THEN if_abap_behv=>auth-unauthorized
+                                            ELSE if_abap_behv=>auth-allowed
+                                             )
+                          IN
+                          %tky                   = ls_certificates-%tky
+                          %action-InactiveVersion = status_inativo
+                          %action-ActiveVersion   = status_ativo
+      ) TO result.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+  METHOD get_global_authorizations.
+
+**Se o usuario estiver tentando criar
+*    IF requested_authorizations-%create = if_abap_behv=>mk-on.
+**    Authority check
+*      RESult-%create = if_abap_behv=>auth-unauthorized.
+*    ENDIF.
+
   ENDMETHOD.
 
   METHOD setInitialValues.
@@ -361,5 +402,6 @@ CLASS lhc_Certificate IMPLEMENTATION.
 
 
   ENDMETHOD.
+
 
 ENDCLASS.

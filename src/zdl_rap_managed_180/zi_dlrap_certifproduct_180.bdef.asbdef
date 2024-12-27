@@ -7,7 +7,7 @@ define behavior for ZI_DLRAP_CERTIFPRODUCT_180 alias Certificate
 persistent table zrap_certif_180
 draft table zdrap_certif_180
 lock master total etag LocalLastChangedAt
-authorization master ( instance )
+authorization master ( global, instance )
 //etag master <field_name>
 {
   create;
