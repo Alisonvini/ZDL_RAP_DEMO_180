@@ -1,0 +1,4 @@
+@EndUserText.label: 'UI - Voos'
+define service Zuidlrap_flight_180 {
+  expose ZC_FLIGHT_COMPLETE_180;
+}
